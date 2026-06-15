@@ -48,7 +48,7 @@ class Settings:
             app_id=os.getenv("WECHAT_APP_ID", "").strip(),
             app_secret=os.getenv("WECHAT_APP_SECRET", "").strip(),
             article_html=_path_from_env("ARTICLE_HTML", "content/article.html"),
-            cover_image=_path_from_env("COVER_IMAGE", "content/cover.jpg"),
+            cover_image=_path_from_env("COVER_IMAGE", "content/test.png"),
             article_title=os.getenv("ARTICLE_TITLE", "").strip(),
             article_author=os.getenv("ARTICLE_AUTHOR", "").strip(),
             article_digest=os.getenv("ARTICLE_DIGEST", "").strip(),
