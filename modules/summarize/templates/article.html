@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$title</title>
+  <style>
+    :root { color-scheme: light; --ink: #18212f; --muted: #687386; --accent: #315efb; --line: #e8ebf1; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f7fb; color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.8; }
+    main { width: min(760px, calc(100% - 32px)); margin: 40px auto; padding: 52px; background: #fff; box-shadow: 0 14px 40px rgba(32, 45, 72, .08); }
+    header { padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 12px; font-size: clamp(28px, 5vw, 42px); line-height: 1.25; letter-spacing: -.02em; }
+    .meta, .source { color: var(--muted); font-size: 14px; }
+    .introduction { margin: 22px 0 0; color: #3d4858; font-size: 18px; }
+    .feature-article { padding: 46px 0 40px; border-bottom: 1px solid var(--line); }
+    .section-label { margin: 0 0 10px; color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: .14em; }
+    h2 { margin: 0 0 18px; font-size: 27px; line-height: 1.45; }
+    p { margin: 12px 0; }
+    .article-lead { margin: 0 0 24px; padding: 18px 20px; background: #f3f6ff; border-left: 3px solid var(--accent); color: #303c50; font-size: 17px; }
+    .article-body p { margin: 0 0 20px; text-align: justify; }
+    .source { margin-top: 28px; padding-top: 16px; border-top: 1px dashed var(--line); }
+    .conclusion { margin-top: 36px; padding: 26px 28px; background: #f7f8fa; }
+    .conclusion h2 { margin-bottom: 12px; font-size: 21px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { padding-top: 24px; color: var(--muted); font-size: 13px; text-align: center; }
+    @media (max-width: 600px) { main { margin: 0; width: 100%; padding: 30px 22px; } h2 { font-size: 24px; } .conclusion { padding: 22px 18px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="meta">AI 资讯简报 · 生成于 $generated_at</p>
+      <h1>$title</h1>
+      <p class="introduction">$introduction</p>
+    </header>
+    <section>
+      $news_items
+    </section>
+    <section class="conclusion">
+      <h2>写在最后</h2>
+      <p>$conclusion</p>
+    </section>
+    <footer>本文由 AI 辅助整理，请以所附原始来源为准。</footer>
+  </main>
+</body>
+</html>

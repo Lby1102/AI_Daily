@@ -1,0 +1,13 @@
+# AI Daily Workflow 统一依赖（pip install -r requirements.txt）
+# 模块 2~4
+openai>=1.0.0
+python-dotenv>=1.0.0
+# 模块 6
+APScheduler==3.11.0
+beautifulsoup4==4.13.4
+requests>=2.31
+# 胶水层（docx / 图片处理 / 状态）
+python-docx>=1.1.0
+pillow>=10.0.0
+# 本地网页登录公众号（不走 API，不受 IP 白名单影响；复用已安装 Chrome）
+playwright>=1.55.0

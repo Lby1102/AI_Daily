@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import mimetypes
+import re
 from pathlib import Path
 from typing import Any
 
@@ -75,10 +77,16 @@ class WeChatAPI:
         return str(media_id)
 
     def add_draft(self, article: dict[str, Any]) -> str:
+        # 微信草稿接口会把 requests 的默认 ASCII JSON 转义（如 \u4e2d）
+        # 原样显示在编辑器中。必须明确发送未转义的 UTF-8 JSON。
+        payload = json.dumps(
+            {"articles": [article]}, ensure_ascii=False, separators=(",", ":")
+        ).encode("utf-8")
         response = self.session.post(
             f"{API_BASE}/cgi-bin/draft/add",
             params={"access_token": self.get_access_token()},
-            json={"articles": [article]},
+            data=payload,
+            headers={"Content-Type": "application/json; charset=utf-8"},
             timeout=self.timeout,
         )
         data = self._json_or_raise(response)
@@ -99,9 +107,16 @@ class WeChatAPI:
         if not response.ok:
             raise WeChatAPIError(f"微信接口 HTTP {response.status_code}: {data}")
         errcode = data.get("errcode")
+        if str(errcode) == "40164":
+            match = re.search(r"invalid ip\s+([^\s,]+)", str(data.get("errmsg", "")))
+            ip = match.group(1) if match else "微信错误信息中的出口 IP"
+            raise WeChatAPIError(
+                f"微信拒绝访问（40164）：出口 IP {ip} 不在公众号 IP 白名单。\n"
+                f"请公众号管理员在后台的开发配置中找到 IP 白名单，添加 {ip}，保留已有条目并保存。\n"
+                "保存后重新选择同一稿件上传即可，无需重新生成。网络或代理改变后，出口 IP 也可能变化。"
+            )
         if errcode not in (None, 0):
             raise WeChatAPIError(
                 f"微信接口错误 {errcode}: {data.get('errmsg', '未知错误')}"
             )
         return data
-

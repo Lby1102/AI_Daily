@@ -10,6 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 from .config import Settings
 from .html_article import HTMLArticleProcessor
 from .service import DraftPushService
+from .wechat_api import WeChatAPIError
 
 
 LOGGER = logging.getLogger(__name__)
@@ -100,8 +101,10 @@ def main() -> int:
             return 0
         if args.command == "schedule":
             return run_scheduler(settings)
+    except (WeChatAPIError, ValueError, FileNotFoundError) as exc:
+        LOGGER.error("上传未完成：%s", exc)
+        return 1
     except Exception:
         LOGGER.exception("执行失败")
         return 1
     return 1
-

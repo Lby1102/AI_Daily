@@ -1,0 +1,55 @@
+# Secrets and local configuration (templates are public)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*service-account*.json
+# Runtime data, drafts, login sessions, logs and personal feedback
+/data/*
+!/data/wechat-cover/
+/data/wechat-cover/*
+!/data/wechat-cover/README.md
+/review/*
+!/review/.gitkeep
+/logs/
+**/.cache/
+**/output/
+**/storage-state*.json
+**/cookies*.json
+**/feedback.txt
+/modules/summarize/input/*
+!/modules/summarize/input/*.example
+# Dependencies, model weights, caches and editor state
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.gguf
+*.safetensors
+*.log
+*.sqlite*
+*.db
+.vscode/
+.idea/
+.codex/
+.agents/
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# Explicitly public synthetic test data
+!/data/sample/
+/data/sample/*
+!/data/sample/sample_items.json
