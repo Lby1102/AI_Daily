@@ -44,6 +44,7 @@ AI-Daily-Workflow/
 ├─ review/{日期}(-v1/-v2…)  ★ 审核文件夹（docx + 图片附件 + html + 封面；同日多版本并存）
 ├─ data/                运行时数据；wechat-cover/cover.jpg 是公众号固定封面
 ├─ docs/ARCHITECTURE.md 模块接口协议（文件/命令/退出码）
+├─ docs/SYSTEM_PROMPTS.txt 提示词工程说明与可复用 System Prompt
 ├─ tests/               离线单测
 └─ README.md
 ```
@@ -81,6 +82,14 @@ python app\control.py status                                # 状态
 - 本地 llama.cpp 和 DeepSeek 默认都启用 JSON 输出约束；成稿显示抽取进度和具体重试原因，输出被 token 上限截断时会明确报错。
 - 生成开始记录 `running`，失败记录 `failed` 及错误清单；最近一次生成失败或尚未完成的日期不能推送。
 - 测试：`python -m unittest discover -s tests -v`（离线）。
+
+## 提示词工程与模型适配
+
+本项目的成稿效果不只依赖模型本身，也来自针对新闻工作流做过的提示词工程和生成逻辑调整。主要包括：把候选抽取、新闻选择、单篇写作和整稿包装拆成不同阶段；将 5 篇新闻逐篇生成后再拼接，降低本地模型上下文压力；使用 JSON Schema 约束字段和数量；对每篇正文执行 400～600 字、段落数和必填字段校验；只重试不合格的小节，避免整稿重写；明确区分事实、厂商说法、背景和未验证信息。
+
+可直接参考或复制的 System Prompt、用户输入模板、JSON 输出格式及调参建议保存在 [`docs/SYSTEM_PROMPTS.txt`](docs/SYSTEM_PROMPTS.txt)。它们适用于支持聊天补全的云端 API，也适用于 llama.cpp、Ollama、vLLM 等提供 OpenAI 兼容接口的本地模型。不同模型对 JSON Schema 和中文长度控制的服从度不同，接入后仍应保留代码中的结构校验与自动重试。
+
+实际运行时使用的提示词位于 `modules/summarize/src/ai_news_workflow/deepseek_client.py`。修改提示词后建议先运行离线测试，再生成一个新版本人工检查事实准确性、重复表达、字数和来源链接。
 
 ## 从零开始使用
 
