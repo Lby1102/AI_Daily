@@ -74,6 +74,33 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(len(article.items), 5)
         self.assertEqual(client._json_completion.call_count, 6)
 
+    def test_generated_item_preserves_candidate_source(self):
+        generated = {
+            "title": "模型生成标题",
+            "lead": "开篇" * 30,
+            "paragraphs": ["事实" * 60, "背景" * 60, "观察" * 60],
+            "source_name": "错误来源",
+            "source_url": "https://wrong.example.com/news",
+        }
+        client = DeepSeekClient.__new__(DeepSeekClient)
+        client.settings = Settings("local", "http://127.0.0.1:8080/v1", "test", 16000, 0)
+        client._json_completion = Mock(return_value=generated)
+        candidate = Candidate(
+            candidate_id="1", title="原始候选", summary="摘要", key_facts=["事实"],
+            background="背景", caveats=["限制"], source_name="原始来源",
+            source_url="https://example.com/original", published_at="2026-09-09",
+            heat_evidence="热度", event_key="event-1",
+            dimensions=ScoreDimensions(90, 90, 90, 90, 90, 90), score_reason="理由",
+        )
+
+        item = client._generate_item(candidate, "", 1)
+
+        self.assertEqual(item.title, generated["title"])
+        self.assertEqual(item.lead, generated["lead"])
+        self.assertEqual(item.paragraphs, generated["paragraphs"])
+        self.assertEqual(item.source_name, candidate.source_name)
+        self.assertEqual(item.source_url, candidate.source_url)
+
 
 if __name__ == "__main__":
     unittest.main()

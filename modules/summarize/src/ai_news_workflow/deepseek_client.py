@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import replace
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -339,6 +340,11 @@ class DeepSeekClient:
                 item = ArticleItem.from_dict(self._json_completion(
                     ITEM_SYSTEM_PROMPT, base_prompt + correction, ITEM_SCHEMA
                 ))
+                item = replace(
+                    item,
+                    source_name=candidate.source_name,
+                    source_url=candidate.source_url,
+                )
                 item.validate(index)
                 return item
             except ValueError as exc:
